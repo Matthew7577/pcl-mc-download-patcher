@@ -477,6 +477,7 @@ def main():
         return 1
     print(f"patched: {', '.join(applied)}")
     print(f"output: {out}")
+    print("WARNING: modpack import is NOT restored by this patch")
     return 0
 
 if __name__ == "__main__":
