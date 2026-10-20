@@ -41,7 +41,7 @@ python Patch-PCL-McDownload.py "PCL.exe" -o "PCL-patched.exe"
 - 不修改版本号，也不阻止 PCL 自动更新；PCL 更新后补丁会失效，需要重新运行。
 - 生成的 exe 未签名，可能被 SmartScreen 或杀毒软件误报。
 - 脚本会校验版本；不是 2.99.0.0（413/414）的 exe 一律拒绝处理。
-- 仅在 2.99.0.0（快照 414）的 `pcl-test.exe` 上实测；正式版 413 使用同一份源码，但未实测。若目标版本没有该限制，脚本会提示 `Nothing to patch` 并退出。
+- 已在 2.99.0.0 正式版 413（`release-2.99.0.0.exe`）和快照版 414（`pcl-test.exe`）上实测。若目标版本没有该限制，脚本会提示 `Nothing to patch` 并退出。
 
 ## 注意
 
