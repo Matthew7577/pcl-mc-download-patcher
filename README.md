@@ -50,4 +50,4 @@ python Patch-PCL-McDownload.py "PCL.exe" -o "PCL-patched.exe"
 ## 注意
 
 - 原 exe 不会被覆盖；确认新 exe 可正常使用后，可自行替换。
-- 本工具仅供学习和技术研究使用。请遵守当地法律法规以及 PCL 的许可协议，使用后果自负。
+- 本工具由 Deepseek AI 生成，仅供学习和技术研究使用。请遵守当地法律法规以及 PCL 的许可协议，使用后果自负。
