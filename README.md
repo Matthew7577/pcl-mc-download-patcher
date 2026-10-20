@@ -1,0 +1,44 @@
+# PCL 2.99 MC 下载限制恢复补丁
+
+用于恢复 PCL 2.99 中「下载 → 原版游戏」功能的补丁脚本。脚本读取 PCL 的 exe，生成一个新的已打补丁 exe，不会修改原文件。
+
+## 环境要求
+
+- Windows
+- Python 3.8 或更高版本（安装时请勾选「Add Python to PATH」）
+- 经典 .NET Framework 版 PCL 2.99（约 6 MB 的 exe）
+
+## 使用方法
+
+1. 关闭正在运行的 PCL。
+2. 打开命令行，进入本目录。
+3. 运行：
+
+```powershell
+python Patch-PCL-McDownload.py "C:\路径\Plain Craft Launcher 2.exe"
+```
+
+默认会在原 exe 旁边生成 `Plain Craft Launcher 2-patched.exe`。也可以指定输出文件名：
+
+```powershell
+python Patch-PCL-McDownload.py "PCL.exe" -o "PCL-patched.exe"
+```
+
+4. 用生成的新 exe 启动 PCL，打开「下载 → 原版游戏」，即可看到版本列表。
+
+如果 PCL 位于 `Program Files` 等受保护目录，请先把 exe 复制到可写目录（例如桌面）再运行脚本，或者以管理员身份打开命令行。
+
+## 限制
+
+- 只恢复「下载 → 原版游戏」页面，以及「版本设置 → 修改」中的 Minecraft 卡片。
+- 不恢复整合包导入和整合包资源页的「安装」按钮。2.99 已将这些入口的原始代码移除，无法通过本补丁恢复。
+- 不支持 PCL2 CE x64 或单文件打包版（约 23 MB 的 exe），运行时会报错退出。
+- 不提供任何下载源，也不绕过网络限制；能否下载仍取决于网络和 Mojang/PCL 服务。
+- 不修改版本号，也不阻止 PCL 自动更新；PCL 更新后补丁会失效，需要重新运行。
+- 生成的 exe 未签名，可能被 SmartScreen 或杀毒软件误报。
+- 仅在 2.99.0.0（快照 414）的 `pcl-test.exe` 上测试过，其他版本可能无法匹配。若目标版本没有该限制，脚本会提示 `Nothing to patch` 并退出。
+
+## 注意
+
+- 原 exe 不会被覆盖；确认新 exe 可正常使用后，可自行替换。
+- 本工具仅供学习和技术研究使用。请遵守当地法律法规以及 PCL 的许可协议，使用后果自负。
