@@ -78,6 +78,9 @@ def u64(b, o):
 def align4(n):
     return (n + 3) & ~3
 
+class VersionError(Exception):
+    pass
+
 class PE:
     def __init__(self, data):
         self.data = data
@@ -283,6 +286,25 @@ class Metadata:
                 return rid
         return None
 
+    def assembly_version(self):
+        if not self.rows.get(32):
+            return None
+        r = self.row(32, 1)
+        return f"{r[1]}.{r[2]}.{r[3]}.{r[4]}"
+
+    def int_const(self, type_name, field_name):
+        t = self.find_type(type_name)
+        if not t:
+            return None
+        for f in self.type_fields(t):
+            if self.row(4, f)[1] != field_name:
+                continue
+            for c in range(1, self.rows[11] + 1):
+                typ, _, parent, value = self.row(11, c)
+                if typ == 8 and parent & 3 == 0 and parent >> 2 == f:
+                    return int.from_bytes(value, "little", signed=True)
+        return None
+
     def body(self, method_rid):
         rva = self.row(6, method_rid)[0]
         if not rva:
@@ -320,8 +342,14 @@ def parse_args(argv):
 def patch(data):
     pe = PE(data)
     md = Metadata(data, pe)
+    version = md.assembly_version()
+    code = md.int_const("PCL.ModBase", "VersionCode")
+    if version != "2.99.0.0" or code not in (413, 414):
+        raise VersionError(
+            f"unsupported PCL version {version} (VersionCode {code}); only 2.99.0.0 (413/414) is supported"
+        )
     if not md.find_type("PCL.PageDownloadInstall"):
-        raise SystemExit("not a PCL 2 assembly with the download page")
+        raise VersionError("not a PCL 2 assembly with the download page")
     out = bytearray(data)
     applied = []
 
@@ -427,12 +455,19 @@ def main():
         return 1
     try:
         patched, applied = patch(data)
+    except VersionError as e:
+        print(f"cannot patch {src}: {e}")
+        return 1
     except (ValueError, IndexError, KeyError) as e:
         print(f"cannot patch {src}: {e}")
         return 1
     if not applied:
         print("Nothing to patch; this build is already unrestricted or the pattern changed.")
         return 0
+    missing = {"loader", "visibility", "constant"} - set(applied)
+    if missing:
+        print(f"unsupported build: missing {', '.join(sorted(missing))}; refusing to write")
+        return 1
     try:
         with open(out, "wb") as f:
             f.write(patched)

@@ -6,7 +6,11 @@
 
 - Windows
 - Python 3.8 或更高版本（安装时请勾选「Add Python to PATH」）
-- 经典 .NET Framework 版 PCL 2.99（约 6 MB 的 exe）
+- 经典 .NET Framework 版 PCL 2.99.0.0（正式版 413 或快照版 414，约 6 MB 的 exe）
+
+## 版本校验
+
+脚本只处理 2.99.0.0：正式版 413 或快照版 414。其他版本会直接退出，不会生成文件。如果补丁内容无法完整匹配，脚本也会拒绝写出文件，避免生成损坏的 exe。
 
 ## 使用方法
 
@@ -36,7 +40,8 @@ python Patch-PCL-McDownload.py "PCL.exe" -o "PCL-patched.exe"
 - 不提供任何下载源，也不绕过网络限制；能否下载仍取决于网络和 Mojang/PCL 服务。
 - 不修改版本号，也不阻止 PCL 自动更新；PCL 更新后补丁会失效，需要重新运行。
 - 生成的 exe 未签名，可能被 SmartScreen 或杀毒软件误报。
-- 仅在 2.99.0.0（快照 414）的 `pcl-test.exe` 上测试过，其他版本可能无法匹配。若目标版本没有该限制，脚本会提示 `Nothing to patch` 并退出。
+- 脚本会校验版本；不是 2.99.0.0（413/414）的 exe 一律拒绝处理。
+- 仅在 2.99.0.0（快照 414）的 `pcl-test.exe` 上实测；正式版 413 使用同一份源码，但未实测。若目标版本没有该限制，脚本会提示 `Nothing to patch` 并退出。
 
 ## 注意
 
